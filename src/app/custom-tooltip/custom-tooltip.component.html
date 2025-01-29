@@ -7,10 +7,10 @@
 </div> -->
 
 <div class="tooltip-content" [ngClass]="{'scrollable': isContentScrollable}" #tooltipContent (click)="$event.stopPropagation()">
+  <div *ngIf="isContentScrollable" class="close-icon" (click)="closeTooltip()">&times;</div>
   <ng-container *ngIf="isTemplate(content); else textContent">
     <ng-container *ngTemplateOutlet="content"></ng-container>
   </ng-container>
   <ng-template #textContent>{{ content }}</ng-template>
-  <div *ngIf="isContentScrollable" class="close-icon" (click)="closeTooltip()">&times;</div>
 </div>
 

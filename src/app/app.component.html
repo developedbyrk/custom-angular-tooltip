@@ -1,3 +1,5 @@
+<h2>Custom Angular Tooltip Directive</h2>
+<h4>Scrollable Content for Large Tooltips</h4>
 <p>
   Lorem ipsum dolor sit amet consectetur adipiscing elit commodo facilisi
   blandit et, primis fermentum pellentesque metus montes justo dictum dis nunc
@@ -40,14 +42,26 @@
   erat augue eleifend enim viverra ultricies.
 </p>
 
-<button matTooltip="This is a custom tooltip">mat Tooltip</button>
-<button appTooltip="This is a custom tooltip">Inline Tooltip</button>
+<div class="btn-group">
+  <button appTooltip="This is a custom tooltip">Inline Tooltip</button>
+  <button [appTooltip]="tooltipContent">Tooltip With Html</button>
+</div>
 
-<button [appTooltip]="tooltipContent">Tooltip With Html</button>
 <ng-template #tooltipContent>
-  <!-- <h1>{{timer}}</h1> -->
   <p>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. At soluta fugaLorem ipsum dolor sit amet consectetur adipisicing elit. At soluta fugaLorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. At soluta fugaLorem ipsum dolor sit amet consectetur adipisicing elit. At soluta fugaLorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. At soluta fugaLorem ipsum dolor sit amet consectetur adipisicing elit. At soluta fugaLorem ipsum dolor sit amet consectetur adipisicing elit.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. At soluta fugaLorem
+    ipsum dolor sit amet consectetur adipisicing elit. At soluta fugaLorem ipsum
+    dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet
+    consectetur adipisicing elit. At soluta fugaLorem ipsum dolor sit amet
+    consectetur adipisicing elit. At soluta fugaLorem ipsum dolor sit amet
+    consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur
+    adipisicing elit. At soluta fugaLorem ipsum dolor sit amet consectetur
+    adipisicing elit. At soluta fugaLorem ipsum dolor sit amet consectetur
+    adipisicing elit. At soluta fugaLorem ipsum dolor sit amet consectetur
+    adipisicing elit. At soluta fugaLorem ipsum dolor sit amet consectetur
+    adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+    At soluta fugaLorem ipsum dolor sit amet consectetur adipisicing elit. At
+    soluta fugaLorem ipsum dolor sit amet consectetur adipisicing elit.
   </p>
 </ng-template>
 <p>
