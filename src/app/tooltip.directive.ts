@@ -14,11 +14,17 @@ import { TooltipService } from './tooltip.service';
 export class TooltipDirective {
   @Input('appTooltip')
   content!: string | TemplateRef<any>;
+  
+  @Input() tooltipClass?: string; // Accept custom class
 
   constructor(private el: ElementRef, private tooltipService: TooltipService) {}
 
   @HostListener('mouseenter') onMouseEnter() {
-    this.tooltipService.showTooltip(this.el.nativeElement, this.content);
+    this.tooltipService.showTooltip(
+      this.el.nativeElement,
+      this.content,
+      this.tooltipClass
+    );
     document.addEventListener('click', this.onDocumentClick.bind(this));
   }
 

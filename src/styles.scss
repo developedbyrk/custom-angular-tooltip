@@ -38,3 +38,13 @@ button {
   display: flex;
   gap: 24px;
 }
+
+.red-tooltip {
+  background-color: red !important;
+  color: white !important;
+}
+
+.blue-tooltip {
+  background-color: blue !important;
+  color: yellow !important;
+}

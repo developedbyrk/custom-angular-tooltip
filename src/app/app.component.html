@@ -43,8 +43,8 @@
 </p>
 
 <div class="btn-group">
-  <button appTooltip="This is a custom tooltip">Inline Tooltip</button>
-  <button [appTooltip]="tooltipContent">Tooltip With Html</button>
+  <button appTooltip="This is a custom tooltip" tooltipClass="red-tooltip">Inline Tooltip</button>
+  <button [appTooltip]="tooltipContent" tooltipClass="blue-tooltip">Tooltip With Html</button>
 </div>
 
 <ng-template #tooltipContent>

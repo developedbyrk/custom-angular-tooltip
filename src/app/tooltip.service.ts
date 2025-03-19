@@ -17,7 +17,11 @@ export class TooltipService {
 
   constructor(private overlay: Overlay, private injector: Injector) {}
 
-  showTooltip(triggerElement: HTMLElement, content: string | TemplateRef<any>) {
+  showTooltip(
+    triggerElement: HTMLElement,
+    content: string | TemplateRef<any>,
+    customClass?: string
+  ) {
     // Prevent reloading the tooltip if it's already open for the same element
     if (this.overlayRef && this.currentTriggerElement === triggerElement) {
       return;
@@ -27,7 +31,10 @@ export class TooltipService {
     this.currentTriggerElement = triggerElement; // Store the trigger element
 
     const positionStrategy = this.getPositionStrategy(triggerElement);
-    this.overlayRef = this.overlay.create({ positionStrategy });
+    this.overlayRef = this.overlay.create({
+      positionStrategy,
+      panelClass: customClass || '',
+    });
 
     const shouldScroll = this.shouldMakeScrollable(content); // Determine if the tooltip should be scrollable
 
