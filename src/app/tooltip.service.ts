@@ -1,11 +1,6 @@
-import {
-  Injectable,
-  Injector,
-  ApplicationRef,
-  TemplateRef,
-} from '@angular/core';
 import { Overlay, OverlayRef, PositionStrategy } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { Injectable, Injector, TemplateRef } from '@angular/core';
 import { CustomTooltipComponent } from './custom-tooltip/custom-tooltip.component';
 
 @Injectable({
@@ -14,32 +9,40 @@ import { CustomTooltipComponent } from './custom-tooltip/custom-tooltip.componen
 export class TooltipService {
   private overlayRef?: OverlayRef;
   private currentTriggerElement?: HTMLElement;
+  private tooltipClass?: string;
 
   constructor(private overlay: Overlay, private injector: Injector) {}
 
-  showTooltip(triggerElement: HTMLElement, content: string | TemplateRef<any>, customClass?: string) {
-    // Prevent reloading the tooltip if it's already open for the same element
-    if (this.overlayRef && this.currentTriggerElement === triggerElement) {
-      return;
+  showTooltip(
+    triggerElement: HTMLElement,
+    content: string | TemplateRef<any> | null,
+    customClass?: string
+  ) {
+    const sameTrigger = this.currentTriggerElement === triggerElement;
+
+    // Always close the existing tooltip first
+    this.hideTooltip();
+
+    // Only open new tooltip if this is a different trigger or was just closed
+    if (!sameTrigger) {
+      this.currentTriggerElement = triggerElement;
+      this.tooltipClass = customClass;
+
+      const positionStrategy = this.getPositionStrategy(triggerElement);
+      this.overlayRef = this.overlay.create({
+        positionStrategy,
+        panelClass: customClass || '',
+      });
+
+      const shouldScroll = this.shouldMakeScrollable(content);
+
+      const tooltipPortal = new ComponentPortal(
+        CustomTooltipComponent,
+        null,
+        this.createInjector(content, shouldScroll)
+      );
+      this.overlayRef.attach(tooltipPortal);
     }
-
-    this.hideTooltip(); // Close any existing tooltip before opening a new one
-    this.currentTriggerElement = triggerElement; // Store the trigger element
-
-    const positionStrategy = this.getPositionStrategy(triggerElement);
-    this.overlayRef = this.overlay.create({
-      positionStrategy,
-      panelClass: customClass || '',
-    });
-
-    const shouldScroll = this.shouldMakeScrollable(content); // Determine if the tooltip should be scrollable
-
-    const tooltipPortal = new ComponentPortal(
-      CustomTooltipComponent,
-      null,
-      this.createInjector(content, shouldScroll) // Pass the shouldScroll value
-    );
-    this.overlayRef.attach(tooltipPortal);
   }
 
   hideTooltip() {
@@ -47,24 +50,23 @@ export class TooltipService {
       this.overlayRef.dispose();
       this.overlayRef = undefined;
     }
-    this.currentTriggerElement = undefined; // Clear the trigger element
+
+    this.currentTriggerElement = undefined;
+    this.tooltipClass = undefined;
   }
 
-  /**
-   * Returns the current trigger element.
-   */
   getTriggerElement(): HTMLElement | undefined {
     return this.currentTriggerElement;
   }
 
   private createInjector(
-    content: string | TemplateRef<any>,
+    content: string | TemplateRef<unknown> | null,
     shouldScroll: boolean
   ): Injector {
     return Injector.create({
       providers: [
         { provide: 'tooltipContent', useValue: content },
-        { provide: 'shouldScroll', useValue: shouldScroll }, // Pass the shouldScroll value
+        { provide: 'shouldScroll', useValue: shouldScroll },
       ],
       parent: this.injector,
     });
@@ -81,7 +83,6 @@ export class TooltipService {
       .flexibleConnectedTo(triggerElement);
 
     if (spaceBelow >= 200 || spaceBelow >= spaceAbove) {
-      // Position below
       positionStrategy = positionStrategy.withPositions([
         {
           originX: 'center',
@@ -91,7 +92,6 @@ export class TooltipService {
         },
       ]);
     } else {
-      // Position above
       positionStrategy = positionStrategy.withPositions([
         {
           originX: 'center',
@@ -105,13 +105,13 @@ export class TooltipService {
     return positionStrategy;
   }
 
-  private shouldMakeScrollable(content: string | TemplateRef<any>): boolean {
-    // Check if content is scrollable based on length or height
+  private shouldMakeScrollable(
+    content: string | TemplateRef<unknown> | null
+  ): boolean {
     if (typeof content === 'string') {
-      return content.length > 100; // Adjust this logic based on your needs
+      return content.length > 100;
     } else if (content instanceof TemplateRef) {
-      // You can apply a custom check for TemplateRef content if needed
-      return true; // Assuming you always want to scroll for TemplateRef content
+      return true;
     }
     return false;
   }

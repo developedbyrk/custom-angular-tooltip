@@ -34,6 +34,10 @@ export class CustomTooltipComponent implements AfterViewInit, OnDestroy {
     return content instanceof TemplateRef;
   }
 
+  isMobile(): boolean {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
+
   ngAfterViewInit(): void {
     this.checkIfScrollable();
     this.applyOpenClass();
